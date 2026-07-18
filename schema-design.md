@@ -1,7 +1,11 @@
 ## MySQL Database Design
 
+<<<<<<< HEAD
 List of Clinic System Tables
 admin
+=======
+List of Clinic System Tables admin
+>>>>>>> 4fb8af166cd8719ea3d7ab994ad7925c7b7f4c80
 
 patients
 
@@ -13,9 +17,13 @@ appointments
 
 payments
 
+<<<<<<< HEAD
 Detailed Table Schemas
 Table: admin
 id: INT, Primary Key, Auto Increment, Not Null
+=======
+Detailed Table Schemas Table: admin id: INT, Primary Key, Auto Increment, Not Null
+>>>>>>> 4fb8af166cd8719ea3d7ab994ad7925c7b7f4c80
 
 username: VARCHAR(50), Unique, Not Null
 
@@ -25,8 +33,12 @@ email: VARCHAR(100), Unique, Not Null
 
 created_at: TIMESTAMP, Default CURRENT_TIMESTAMP
 
+<<<<<<< HEAD
 Table: patients
 id: INT, Primary Key, Auto Increment, Not Null
+=======
+Table: patients id: INT, Primary Key, Auto Increment, Not Null
+>>>>>>> 4fb8af166cd8719ea3d7ab994ad7925c7b7f4c80
 
 first_name: VARCHAR(50), Not Null
 
@@ -42,8 +54,12 @@ gender: VARCHAR(15), Nullable
 
 created_at: TIMESTAMP, Default CURRENT_TIMESTAMP
 
+<<<<<<< HEAD
 Table: clinic_locations
 id: INT, Primary Key, Auto Increment, Not Null
+=======
+Table: clinic_locations id: INT, Primary Key, Auto Increment, Not Null
+>>>>>>> 4fb8af166cd8719ea3d7ab994ad7925c7b7f4c80
 
 name: VARCHAR(100), Unique, Not Null
 
@@ -51,8 +67,12 @@ address: VARCHAR(255), Not Null
 
 phone: VARCHAR(20), Nullable
 
+<<<<<<< HEAD
 Table: doctors
 id: INT, Primary Key, Auto Increment, Not Null
+=======
+Table: doctors id: INT, Primary Key, Auto Increment, Not Null
+>>>>>>> 4fb8af166cd8719ea3d7ab994ad7925c7b7f4c80
 
 first_name: VARCHAR(50), Not Null
 
@@ -68,8 +88,12 @@ location_id: INT, Foreign Key → clinic_locations(id), On Delete Set Null
 
 is_active: TINYINT(1), Default 1
 
+<<<<<<< HEAD
 Table: appointments
 id: INT, Primary Key, Auto Increment, Not Null
+=======
+Table: appointments id: INT, Primary Key, Auto Increment, Not Null
+>>>>>>> 4fb8af166cd8719ea3d7ab994ad7925c7b7f4c80
 
 doctor_id: INT, Foreign Key → doctors(id), On Delete Restrict
 
@@ -79,8 +103,12 @@ appointment_time: DATETIME, Not Null
 
 status: INT (0 = Scheduled, 1 = Completed, 2 = Cancelled), Default 0
 
+<<<<<<< HEAD
 Table: payments
 id: INT, Primary Key, Auto Increment, Not Null
+=======
+Table: payments id: INT, Primary Key, Auto Increment, Not Null
+>>>>>>> 4fb8af166cd8719ea3d7ab994ad7925c7b7f4c80
 
 appointment_id: INT, Foreign Key → appointments(id), On Delete Cascade, Unique
 
@@ -91,6 +119,7 @@ payment_status: INT (0 = Pending, 1 = Paid, 2 = Refunded), Default 0
 payment_date: DATETIME, Nullable
 
 Design Considerations & Business Logic
+<<<<<<< HEAD
 1. Data Validation (Email & Phone)
 Email & Phone Validation: While the database enforces string limits and uniqueness, format validation should be handled in the application/backend code. Validating emails (via Regex) and phone numbers (via libraries like libphonenumber) in your backend code ensures clean input before it ever touches your database, preventing query execution errors.
 
@@ -102,6 +131,16 @@ Clinical System Best Practice: In a real-world healthcare application, hard-dele
 3. Overlapping Doctor Appointments
 Prevention Logic: A doctor should never have overlapping appointments.
 
+=======
+
+Data Validation (Email & Phone) Email & Phone Validation: While the database enforces string limits and uniqueness, format validation should be handled in the application/backend code. Validating emails (via Regex) and phone numbers (via libraries like libphonenumber) in your backend code ensures clean input before it ever touches your database, preventing query execution errors.
+
+Patient Deletion Behavior Cascade vs. Audit Trail: In this schema, patient_id in the appointments table is configured with ON DELETE CASCADE. This means if a patient record is completely deleted, all of their historical appointments (and associated payments) will automatically be removed to maintain referential integrity.
+
+Clinical System Best Practice: In a real-world healthcare application, hard-deleting patient records is heavily discouraged due to medical auditing laws. Instead, you should implement a Soft Delete mechanism by adding an is_deleted (TINYINT/Boolean) column to your patients table, allowing you to hide deleted records from users while preserving historical medical files.
+
+Overlapping Doctor Appointments Prevention Logic: A doctor should never have overlapping appointments.
+>>>>>>> 4fb8af166cd8719ea3d7ab994ad7925c7b7f4c80
 Implementation: This is best validated at the application level right before an appointment is booked. Your backend should query the database to verify if the selected doctor already has an active appointment block at that specific time.
 
 Database level: If appointments have fixed duration blocks (e.g., 30 minutes), you can also enforce a unique index constraint across (doctor_id, appointment_time) to block duplicate bookings at the exact same start time directly at the database layer.
@@ -112,6 +151,7 @@ To complement the MySQL relational schema, a NoSQL document store (like MongoDB)
 
 While core business processes like booking and billing belong in MySQL, clinical data like prescriptions are best stored in NoSQL. This is because a single prescription might contain multiple medications, varying dosage instructions, refill trackings, and pharmacy details that would otherwise require multiple complex table joins in a relational system.
 
+<<<<<<< HEAD
 {
   "_id": "ObjectId('6697b7b1e4b0a8a8f1a2b3c4')",
   "prescription_number": "RX-2026-9842",
@@ -170,6 +210,11 @@ While core business processes like booking and billing belong in MySQL, clinical
 
 Why this design works:
 Hybrid Integration: The appointment_id, patient_id, and doctor_id fields act as lightweight foreign key bridges back to your relational MySQL tables.
+=======
+{ "_id": "ObjectId('6697b7b1e4b0a8a8f1a2b3c4')", "prescription_number": "RX-2026-9842", "appointment_id": 1042, "patient": { "patient_id": 450, "full_name": "Jane Doe", "dob": "1994-08-12" }, "doctor": { "doctor_id": 18, "full_name": "Dr. Sarah Jenkins", "specialization": "Pediatrics" }, "medications": [ { "name": "Amoxicillin", "dosage": "500mg", "route": "Oral", "frequency": "Three times daily", "duration_days": 10, "quantity_dispensed": 30, "refills_allowed": 0, "instructions": "Take with food. Complete the full course even if symptoms improve." }, { "name": "Ibuprofen", "dosage": "400mg", "route": "Oral", "frequency": "Every 6 hours as needed for pain or fever", "duration_days": 5, "quantity_dispensed": 20, "refills_allowed": 1, "instructions": "Take with a full glass of water." } ], "pharmacy": { "name": "CVS Pharmacy #4102", "phone": "555-0199", "address": "100 Main St, Suite B" }, "metadata": { "issued_at": "2026-07-17T10:30:00Z", "expires_at": "2027-07-17T10:30:00Z", "status": "active", "tags": ["pediatric", "antibiotic", "nsaid"], "revision_history": [ { "updated_at": "2026-07-17T10:35:00Z", "modified_by": "Dr. Sarah Jenkins", "change_description": "Corrected ibuprofen dosage from 200mg to 400mg." } ] } }
+
+Why this design works: Hybrid Integration: The appointment_id, patient_id, and doctor_id fields act as lightweight foreign key bridges back to your relational MySQL tables.
+>>>>>>> 4fb8af166cd8719ea3d7ab994ad7925c7b7f4c80
 
 Flexible Arrays: Patients are often prescribed multiple medications at once. Storing these as an array of embedded documents inside the single prescription object avoids creating a heavy prescription_items join table.
 
